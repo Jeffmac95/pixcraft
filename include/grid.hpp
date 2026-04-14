@@ -1,6 +1,7 @@
 #pragma once
 
 #include "raylib.h"
+#include "raymath.h"
 #include "layer.hpp"
 #include "ui.hpp"
 #include <vector>
@@ -35,4 +36,6 @@ private:
 	int activeLayer = 0;
 	Vector2 lineStart = {0, 0};
 	bool isDrawingStraightLine = false;
+	bool isDrawingRect = false;
+	bool isDrawingCircle = false;
 };

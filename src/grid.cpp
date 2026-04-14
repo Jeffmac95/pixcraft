@@ -63,6 +63,50 @@ bool Grid::HandleInput(Vector2& canvasPos, Tool selectedTool, Color& selectedCol
 		return true;
 	}
 
+	if (selectedTool == TOOL_RECT && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+		lineStart.x = (GetMouseX() - canvasPos.x) / zoom;
+		lineStart.y = (GetMouseY() - canvasPos.y) / zoom;
+		isDrawingRect = true;
+	}
+
+	if (selectedTool == TOOL_RECT && IsMouseButtonReleased(MOUSE_LEFT_BUTTON) && isDrawingRect) {
+		if (canvasStates.size() >= 10) {
+			UnloadImage(canvasStates.front());
+			canvasStates.erase(canvasStates.begin());
+		}
+		canvasStates.push_back(ImageCopy(layers[activeLayer].image));
+		int destX = (GetMouseX() - canvasPos.x) / zoom;
+		int destY = (GetMouseY() - canvasPos.y) / zoom;
+		int width = destX - lineStart.x;
+		int height = destY - lineStart.y;
+		Rectangle rect = { (float)lineStart.x, (float)lineStart.y, (float)width, (float)height };
+		ImageDrawRectangleLines(&layers[activeLayer].image, rect, 1, selectedColor);
+		UpdateTexture(layers[activeLayer].texture, layers[activeLayer].image.data);
+		isDrawingRect = false;
+		return true;
+	}
+
+	if (selectedTool == TOOL_CIRCLE && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+		lineStart.x = (GetMouseX() - canvasPos.x) / zoom;
+		lineStart.y = (GetMouseY() - canvasPos.y) / zoom;
+		isDrawingCircle = true;
+	}
+
+	if (selectedTool == TOOL_CIRCLE && IsMouseButtonReleased(MOUSE_LEFT_BUTTON) && isDrawingCircle) {
+		if (canvasStates.size() >= 10) {
+			UnloadImage(canvasStates.front());
+			canvasStates.erase(canvasStates.begin());
+		}
+		canvasStates.push_back(ImageCopy(layers[activeLayer].image));
+		int destX = (GetMouseX() - canvasPos.x) / zoom;
+		int destY = (GetMouseY() - canvasPos.y) / zoom;
+		float radius = Vector2Distance(lineStart, {(float)destX, (float)destY});
+		ImageDrawCircleLines(&layers[activeLayer].image, lineStart.x, lineStart.y, (int)radius, selectedColor);
+		UpdateTexture(layers[activeLayer].texture, layers[activeLayer].image.data);
+		isDrawingCircle = false;
+		return true;
+	}
+
 	if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
 		if (selectedTool == TOOL_NUKE) {
 			if (canvasStates.size() >= 10) {
@@ -82,11 +126,29 @@ bool Grid::HandleInput(Vector2& canvasPos, Tool selectedTool, Color& selectedCol
 			}
 			canvasStates.push_back(ImageCopy(layers[activeLayer].image));
 		}
+
+		if (selectedTool != TOOL_STRAIGHTLINE && selectedTool != TOOL_RECT) {
+			if (canvasStates.size() >= 10) {
+				UnloadImage(canvasStates.front());
+				canvasStates.erase(canvasStates.begin());
+			}
+			canvasStates.push_back(ImageCopy(layers[activeLayer].image));
+		}
+
+		if (selectedTool != TOOL_STRAIGHTLINE && selectedTool != TOOL_RECT && selectedTool != TOOL_CIRCLE) {
+			if (canvasStates.size() >= 10) {
+				UnloadImage(canvasStates.front());
+				canvasStates.erase(canvasStates.begin());
+			}
+			canvasStates.push_back(ImageCopy(layers[activeLayer].image));
+		}
 	}
 
 	if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
 		if (selectedTool == TOOL_NUKE) return false;
 		if (selectedTool == TOOL_STRAIGHTLINE) return false;
+		if (selectedTool == TOOL_RECT) return false;
+		if (selectedTool == TOOL_CIRCLE) return false;
 
 		int canvasX = (GetMouseX() - canvasPos.x) / zoom;
 		int canvasY = (GetMouseY() - canvasPos.y) / zoom;

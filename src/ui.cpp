@@ -14,8 +14,8 @@ void UI::Draw() {
 	if (GuiButton(nukeBtn, "#143#")) selectedTool = TOOL_NUKE;
 	if (GuiButton(straightLineBtn, "#63#")) selectedTool = TOOL_STRAIGHTLINE;
 	GuiButton(fillBtn, "#29#");
-	GuiButton(drawRectBtn, "#133#");
-	GuiButton(drawCircleBtn, "#135#");
+	if (GuiButton(drawRectBtn, "#133#")) selectedTool = TOOL_RECT;
+	if (GuiButton(drawCircleBtn, "#135#")) selectedTool = TOOL_CIRCLE;
 	GuiLabel(transformLabel, "TRANSFORM");
 	if (GuiButton(flipBtn, "#39#")) isFlipBtnPressed = true;
 	if (GuiButton(rotateBtn, "#72#")) isRotateBtnPressed = true;
