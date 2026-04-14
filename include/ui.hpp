@@ -8,7 +8,10 @@
 
 enum Tool {
 	TOOL_PENCIL,
-	TOOL_ERASER
+	TOOL_ERASER,
+	TOOL_COLORPICKER,
+	TOOL_NUKE,
+	TOOL_STRAIGHTLINE
 };
 
 class UI {
@@ -17,7 +20,7 @@ public:
 	void Draw();
 	void DrawPrevColors();
 	Tool getSelectedTool();
-	Color getSelectedColor();
+	Color& getSelectedColor();
 	bool getisPrevColorBtnSelected();
 	bool getisSavePressed();
 	bool getisImportPressed();
@@ -42,15 +45,21 @@ private:
 	Tool selectedTool = TOOL_PENCIL;
 	Color selectedColor = BLACK;
 	Color lastColor = selectedColor;
-	Rectangle resizeDropdown = { 10.0f, 10.0f, 80.0f, 30.0f };
-	Rectangle resizeBtn = { 100.0f, 10.0f, 50.0f, 30.0f };
+	Rectangle resizeDropdown = { 150.0f, 10.0f, 80.0f, 30.0f };
+	Rectangle resizeBtn = { 235.0f, 10.0f, 50.0f, 30.0f };
 	bool isResizeBtnPressed = false;
-	Rectangle toolsLabel = { 10.0f, 120.0f, 100.0f, 30.0f };
-	Rectangle pencilBtn = { 10.0f, 140.0f, 50.0f, 30.0f };
-	Rectangle eraserBtn = { 70.0f, 140.0f, 50.0f, 30.0f };
-	Rectangle transformLabel = { 10.0f, 240.0f, 100.0f, 30.0f };
-	Rectangle flipBtn = { 10.0f, 260.0f, 50.0f, 30.0f };
-	Rectangle rotateBtn = { 70.0f, 260.0f, 50.0f, 30.0f };
+	Rectangle toolsLabel = { 10.0f, 10.0f, 100.0f, 30.0f };
+	Rectangle pencilBtn = { 10.0f, 40.0f, 50.0f, 30.0f };
+	Rectangle eraserBtn = { 70.0f, 40.0f, 50.0f, 30.0f };
+	Rectangle colorPickBtn = { 10.0f, 80.0f, 50.0f, 30.0f };
+	Rectangle nukeBtn = { 70.0f, 80.0f, 50.0f, 30.0f };
+	Rectangle straightLineBtn = { 10.0f, 120.0f, 50.0f, 30.0f };
+	Rectangle fillBtn = { 70.0f, 120.0f, 50.0f, 30.0f };
+	Rectangle drawRectBtn = { 10.0f, 160.0f, 50.0f, 30.0f };
+	Rectangle drawCircleBtn = { 70.0f, 160.0f, 50.0f, 30.0f };
+	Rectangle transformLabel = { 10.0f, 200.0f, 100.0f, 30.0f };
+	Rectangle flipBtn = { 10.0f, 230.0f, 50.0f, 30.0f };
+	Rectangle rotateBtn = { 70.0f, 230.0f, 50.0f, 30.0f };
 	Rectangle exportInputArea = { 10.0f, 300.0f, 80.0f, 30.0f };
 	Rectangle importInputArea = { 10.0f, 340.0f, 80.0f, 30.0f };
 	Rectangle exportBtn = { 95.0f, 300.0f, 30.0f, 30.0f };

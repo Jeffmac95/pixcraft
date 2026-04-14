@@ -3,7 +3,6 @@
 #include "raylib.h"
 #include <string>
 
-
 struct Layer {
 	Image image;
 	Texture2D texture;

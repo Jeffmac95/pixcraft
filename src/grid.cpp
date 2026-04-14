@@ -41,18 +41,64 @@ void Grid::Draw(Vector2 canvasPos) {
 	}
 }
 
-bool Grid::HandleInput(Vector2& canvasPos, Tool selectedTool, Color selectedColor) {
-	if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+bool Grid::HandleInput(Vector2& canvasPos, Tool selectedTool, Color& selectedColor) {
+
+	if (selectedTool == TOOL_STRAIGHTLINE && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+		lineStart.x = (GetMouseX() - canvasPos.x) / zoom;
+		lineStart.y = (GetMouseY() - canvasPos.y) / zoom;
+		isDrawingStraightLine = true;
+	}
+
+	if (selectedTool == TOOL_STRAIGHTLINE && IsMouseButtonReleased(MOUSE_LEFT_BUTTON) && isDrawingStraightLine) {
 		if (canvasStates.size() >= 10) {
 			UnloadImage(canvasStates.front());
 			canvasStates.erase(canvasStates.begin());
 		}
 		canvasStates.push_back(ImageCopy(layers[activeLayer].image));
+		int destX = (GetMouseX() - canvasPos.x) / zoom;
+		int destY = (GetMouseY() - canvasPos.y) / zoom;
+		ImageDrawLine(&layers[activeLayer].image, lineStart.x, lineStart.y, destX, destY, selectedColor);
+		UpdateTexture(layers[activeLayer].texture, layers[activeLayer].image.data);
+		isDrawingStraightLine = false;
+		return true;
+	}
+
+	if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+		if (selectedTool == TOOL_NUKE) {
+			if (canvasStates.size() >= 10) {
+				UnloadImage(canvasStates.front());
+				canvasStates.erase(canvasStates.begin());
+			}
+			canvasStates.push_back(ImageCopy(layers[activeLayer].image));//save state
+			ImageClearBackground(&layers[activeLayer].image, BLANK);
+			UpdateTexture(layers[activeLayer].texture, layers[activeLayer].image.data);
+			return true;
+		}
+
+		if (selectedTool != TOOL_STRAIGHTLINE) {
+			if (canvasStates.size() >= 10) {
+				UnloadImage(canvasStates.front());
+				canvasStates.erase(canvasStates.begin());
+			}
+			canvasStates.push_back(ImageCopy(layers[activeLayer].image));
+		}
 	}
 
 	if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
-		Color c = selectedTool == TOOL_ERASER ? BLANK : selectedColor;
-		return DrawPixel(canvasPos, c);
+		if (selectedTool == TOOL_NUKE) return false;
+		if (selectedTool == TOOL_STRAIGHTLINE) return false;
+
+		int canvasX = (GetMouseX() - canvasPos.x) / zoom;
+		int canvasY = (GetMouseY() - canvasPos.y) / zoom;
+
+		if (canvasX >= 0 && canvasX < canvasWidth && canvasY >= 0 && canvasY < canvasHeight) {
+			if (selectedTool == TOOL_COLORPICKER) {
+				selectedColor = GetImageColor(layers[activeLayer].image, canvasX, canvasY);
+				return true;
+			}
+			Color c = selectedTool == TOOL_ERASER ? BLANK : selectedColor;
+			return DrawPixel(canvasPos, c);
+		}
 	}
 
 	if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)) {

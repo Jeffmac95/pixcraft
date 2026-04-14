@@ -11,7 +11,7 @@ public:
 	Grid(int canvasWidth, int canvasHeight);
 	~Grid();
 	void Draw(Vector2 canvasPos);
-	bool HandleInput(Vector2& canvasPos, Tool selectedTool, Color selectedColor);
+	bool HandleInput(Vector2& canvasPos, Tool selectedTool, Color& selectedColor);
 	bool DrawPixel(Vector2 canvasPos, Color c);
 	int GetPixelWidth();
 	int GetPixelHeight();
@@ -33,4 +33,6 @@ private:
 	int zoom = 8;
 	std::vector<Image> canvasStates;
 	int activeLayer = 0;
+	Vector2 lineStart = {0, 0};
+	bool isDrawingStraightLine = false;
 };

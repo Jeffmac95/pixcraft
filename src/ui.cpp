@@ -2,21 +2,20 @@
 #include "ui.hpp"
 
 
-UI::UI() {
-
-}
+UI::UI() {}
 
 void UI::Draw() {
-	if (GuiDropdownBox(resizeDropdown, "32x32;64x64;128x128", &selectedCanvasSize, isCanvasSizeDropdownOpen)) {
-		isCanvasSizeDropdownOpen = !isCanvasSizeDropdownOpen;
-	}
-	if (GuiButton(resizeBtn, "Resize")) {
-		isResizeBtnPressed = true;
-	}
+	if (GuiDropdownBox(resizeDropdown, "32x32;64x64;128x128", &selectedCanvasSize, isCanvasSizeDropdownOpen)) isCanvasSizeDropdownOpen = !isCanvasSizeDropdownOpen;
+	if (GuiButton(resizeBtn, "Resize")) isResizeBtnPressed = true;
 	GuiLabel(toolsLabel, "TOOLS");
 	if (GuiButton(pencilBtn, "#23#")) selectedTool = TOOL_PENCIL;
 	if (GuiButton(eraserBtn, "#28#")) selectedTool = TOOL_ERASER;
-
+	if (GuiButton(colorPickBtn, "#27#")) selectedTool = TOOL_COLORPICKER;
+	if (GuiButton(nukeBtn, "#143#")) selectedTool = TOOL_NUKE;
+	if (GuiButton(straightLineBtn, "#63#")) selectedTool = TOOL_STRAIGHTLINE;
+	GuiButton(fillBtn, "#29#");
+	GuiButton(drawRectBtn, "#133#");
+	GuiButton(drawCircleBtn, "#135#");
 	GuiLabel(transformLabel, "TRANSFORM");
 	if (GuiButton(flipBtn, "#39#")) isFlipBtnPressed = true;
 	if (GuiButton(rotateBtn, "#72#")) isRotateBtnPressed = true;
@@ -34,10 +33,7 @@ void UI::Draw() {
 	if (GuiTextBox(importInputArea, importInput, fontSize, importInputEditMode)) importInputEditMode = !importInputEditMode;
 	if (GuiButton(exportBtn, "#2#")) isSavePressed = true;
 	if (GuiButton(importBtn, "#3#")) isImportPressed = true;
-
-	if (GuiButton(addLayerBtn, "#8#")) {
-		isAddLayerBtnPressed = true;
-	}
+	if (GuiButton(addLayerBtn, "#8#")) isAddLayerBtnPressed = true;
 }
 
 void UI::DrawPrevColors() {
@@ -111,7 +107,7 @@ void UI::DrawMiniLayers(std::vector<Layer>& layers, int& activeLayer) {
 }
 
 Tool UI::getSelectedTool() { return selectedTool; }
-Color UI::getSelectedColor() { return selectedColor; }
+Color& UI::getSelectedColor() { return selectedColor; }
 bool UI::getisPrevColorBtnSelected() { return isPrevColorBtnSelected; }
 bool UI::getisSavePressed() { return isSavePressed; }
 bool UI::getisImportPressed() { return isImportPressed; }
